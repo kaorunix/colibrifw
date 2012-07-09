@@ -1,0 +1,14 @@
+@(loginForm: Form[org.colibrifw.common.forms.LoginForm])
+@import helper._
+@import org.colibrifw.controllers._
+
+@main("Login") {
+    <H1>Login</H1>
+    @helper.form(action = routes.Login.login) {
+      <fieldset>
+	@inputText(loginForm("account"), '_label -> "Email")
+	@inputText(loginForm("password"), '_label -> "Password")
+      </fieldset>
+      <input type="submit" class="btn primary" value="Login"> 
+    }
+}

@@ -3,7 +3,9 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           org.colibrifw.controllers.Top.index
+GET     /login                      org.colibrifw.controllers.Login.index
+POST     /login                     org.colibrifw.controllers.Login.login
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
