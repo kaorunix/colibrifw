@@ -45,6 +45,8 @@
   <classpathentry path="/usr/local/play/framework/../repository/local/tyrex/tyrex/1.0.1/jars/tyrex.jar" kind="lib"></classpathentry>
   <classpathentry path="/usr/local/play/framework/../repository/local/jaxen/jaxen/1.1.3/jars/jaxen.jar" kind="lib"></classpathentry>
   <classpathentry path="/usr/local/play/framework/../repository/local/net.sf.ehcache/ehcache-core/2.5.0/jars/ehcache-core.jar" kind="lib"></classpathentry>
+  <classpathentry path="/usr/local/play/framework/../repository/cache/javax.mail/mail/jars/mail-1.4.1.jar" kind="lib"></classpathentry>
+  <classpathentry path="/usr/local/play/framework/../repository/cache/javax.activation/activation/jars/activation-1.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/usr/local/play/framework/../repository/local/play/play-test_2.9.1/2.0.1/jars/play-test_2.9.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/usr/local/play/framework/../repository/local/org.specs2/specs2_2.9.1/1.7.1/jars/specs2_2.9.1.jar" kind="lib"></classpathentry>
   <classpathentry path="/usr/local/play/framework/../repository/local/org.specs2/specs2-scalaz-core_2.9.1/6.0.1/jars/specs2-scalaz-core_2.9.1.jar" kind="lib"></classpathentry>
