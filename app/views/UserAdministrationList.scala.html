@@ -1,0 +1,27 @@
+@(users: Seq[org.colibrifw.common.models.User])
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+@main("UserAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@Messages("Common.User")</H1>
+    <table border=1>
+      <tr>
+	<th>account</th>
+	<th>name</th>
+	<th>description</th>
+	<th>organization</th>
+	<th>lang</th>
+	<th>timezone</th>
+	<th>locale</th>
+	<th>country</th>
+      </tr>
+      @users.map(user => UserList(user))
+    </table>
+
+  </div>
+  </div>
+}

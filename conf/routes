@@ -5,7 +5,18 @@
 # Home page
 GET     /                           org.colibrifw.controllers.Top.index
 GET     /login                      org.colibrifw.controllers.Login.index
-POST     /login                     org.colibrifw.controllers.Login.login
+POST    /login                      org.colibrifw.controllers.Login.login
+GET     /logout                     org.colibrifw.controllers.Login.logout
+GET     /info                       org.colibrifw.controllers.Info.index
+GET     /User/Lists                 org.colibrifw.controllers.UserAdministration.index
+GET     /User/Create                org.colibrifw.controllers.UserAdministration.create
+#POST    /User/Create                org.colibrifw.controllers.UserAdministration.create
+#GET     /User/Modify                org.colibrifw.controllers.UserAdministration.index
+#POST    /User/Modify                org.colibrifw.controllers.UserAdministration.modify
+#GET     /User/Delete                org.colibrifw.controllers.UserAdministration.index
+#POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
+#GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.index
+#GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

@@ -1,0 +1,46 @@
+Common.Title=Title
+Common.List=List
+Common.Detail=Detail
+Common.name=Name
+Common.description=Description
+Common.create_date=Create Date
+Common.update_date=Update Date
+Common.Status=Status
+Common.update_user=Update User Name
+Common.OK=OK
+Common.Submit=Submit
+Common.Create=Create
+Common.Delete=Delete
+Common.Modify=Modify
+Common.User=User
+Common.Organization=Organization
+Common.Operation=Operation
+login.title=Login
+login.email=Email
+login.email.placeholder=Email
+login.password=Password
+login.password.placeholder=Password
+login.password.incorrect=Incorrect
+
+User.account=Email
+User.password=Password
+User.password.confirm=Password(confirm)
+User.name=Name
+User.description=Description
+
+#Organization.name=
+#Organization.description
+
+#TimeZone.name=
+#Locale.name=
+#Country.name=
+Status.title=Status
+Status.Approve=Approve
+Status.Created=Created
+Status.Modified=Modified
+Statsu.Deleted=Deleted
+
+operation.user=User Management
+operation.organization=Organization Management
+operation.operation=Operation
+

@@ -1,14 +1,20 @@
 @(loginForm: Form[org.colibrifw.common.forms.LoginForm])
 @import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
 @import org.colibrifw.controllers._
 
 @main("Login") {
-    <H1>Login</H1>
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@Messages("login.title")</H1>
     @helper.form(action = routes.Login.login) {
       <fieldset>
-	@inputText(loginForm("account"), '_label -> "Email")
-	@inputText(loginForm("password"), '_label -> "Password")
+	@inputText(loginForm("account"), '_label -> Messages("login.email"), '_placeholder -> Messages("login.email.placeholder"))
+	@inputPassword(loginForm("password"), '_label -> Messages("login.password"), '_placeholder -> Messages("login.password.placeholder"))
       </fieldset>
       <input type="submit" class="btn primary" value="Login"> 
     }
+  </div>
+  </div>
 }

@@ -1,0 +1,17 @@
+@(user: org.colibrifw.common.models.User)
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+<tr>
+  <td>@user.account</td>
+  <td>@user.name</td>
+  <td>@user.description.getOrElse("")</td>
+  <td>@user.organization.get.name</td>
+  <td>@user.lang.get.name</td>
+  <td>@user.timezone.get.name</td>
+  <td>@user.locale.get.name</td>
+  <td>@user.country.get.name</td>
+</tr>
+

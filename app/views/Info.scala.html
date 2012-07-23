@@ -1,0 +1,69 @@
+@(login:Any)
+
+@main("Info") {
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+	<span class="icon-bar"></span>
+	<span class="icon-bar"></span>
+      </button>
+
+@*      <div class="hero-unit"> *@
+@* MAIN MENU START *@
+  <div class="nav-collapse collapse">
+@*    <ul class="nav nav-tabs">*@
+  <ul class="nav nav-pills">
+    <li class="dropdown" id="info">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="#info">
+	Info
+	<b class="caret"></b>
+      </a>
+      <ul class="dropdown-menu">
+	<li class="active"><a href="#">List</a></li>
+	<li><a href="#">Create</a></li>
+	<li class="divider"></li>
+	<li><a href="#">Apporove</a></li>
+      </ul>
+    </li>
+    <li class="dropdown"><a href="/User/Lists" data-toggle="tab">User Admin</a></li>
+    <li class="dropdown"><a href="#organization" data-toggle="tab">Organization Admin</a></li>
+    <li><a href="#operation" data-toggle="tab">Operation</a></li>
+    <li><a href="logout" data-toggle="tab">Logout</a></li>
+  </ul>
+@* MAIN MENU END *@
+</div>
+@* BREADCRUMB Start *@
+<ul class="breadcrumb">
+  <li>
+    <a href="top">Info</a><span class="divider">/</span>
+  </li>
+</ul>
+@* BREADCRUMB End *@
+</div>
+      <div class="container">
+  <div class="row">
+    <div class="span10 well">
+      <table class="table table-striped table-bordered table-condensed">
+	<tr><th>email</th><td>aaa@@domain.com</td></tr>
+	<tr><th>name</th><td>Abc Def</td></tr>
+	<tr><th>last login</th><td>2012-03-01 10:00:00</td></tr>
+	<tr><th>last logout</th><td>2012-03-01 11:00:00</td></tr>
+      </table>
+    </div>
+    <div class="span10 well">
+<h2>News</h2>
+      <table class="table table-striped table-bordered table-condensed">
+	<tr><th>email</th><td>aaa@@domain.com</td></tr>
+	<tr><th>name</th><td>Abc Def</td></tr>
+	<tr><th>last login</th><td>2012-03-01 10:00:00</td></tr>
+	<tr><th>last logout</th><td>2012-03-01 11:00:00</td></tr>
+      </table>
+    </div>
+  </div>
+  </div> @* hero-unit *@
+
+	  </div>
+	</div>
+}
+
