@@ -1,0 +1,25 @@
+@(orgs: Seq[org.colibrifw.common.models.Organization])
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+@main("OrganizationAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@Messages("Common.Organization")</H1>
+    <table border=1>
+      <tr>
+	<th>name</th>
+	<th>description</th>
+	<th>create_date</th>
+	<th>update_date</th>
+	<th>update_user</th>
+	<th>status</th>
+      </tr>
+      @orgs.map(org => OrganizationList(org))
+    </table>
+
+  </div>
+  </div>
+}

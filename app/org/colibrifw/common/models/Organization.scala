@@ -38,9 +38,9 @@ object Organization {
 	  SQL("SELECT * FROM Organization WHERE ID={id}").on("id" -> id).as(Organization.simple.singleOpt)
 	}
   }
-  def all(order:String="id"):Seq[User] = {
+  def all(order:String="id"):Seq[Organization] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
+	  SQL("SELECT * FROM Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(Organization.simple *)
 	}
   }
 }

@@ -1,0 +1,15 @@
+@(organization: org.colibrifw.common.models.Organization)
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+<tr>
+  <td>@organization.name</td>
+  <td>@organization.description.getOrElse("")</td>
+  <td>@organization.create_date</td>
+  <td>@organization.update_date.getOrElse("")</td>
+  <td>@* organization.update_user.get.name *@</td>
+  <td>@organization.status.get.name</td>
+</tr>
+

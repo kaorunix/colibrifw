@@ -54,4 +54,9 @@ object Operation {
 	  SQL("SELECT * FROM OPERATION WHERE ID={id}").on("id" -> id).as(Operation.simple.singleOpt)
 	}
   }
+  def all(order:String="id"):Seq[Operation] = {
+	DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM Operation WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(Operation.simple *)
+	}
+  }
 }

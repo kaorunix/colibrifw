@@ -1,0 +1,28 @@
+@(oprs: Seq[org.colibrifw.common.models.Operation])
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+@main("OperationAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@Messages("Common.Operation")</H1>
+    <table border=1>
+      <tr>
+	<th>identifier</th>
+	<th>menu_message</th>
+	<th>description</th>
+	<th>order</th>
+	<th>create_date</th>
+	<th>update_date</th>
+	<th>update_user</th>
+	<th>owner_organization</th>
+	<th>status</th>
+      </tr>
+      @oprs.map(opr => OperationList(opr))
+    </table>
+
+  </div>
+  </div>
+}

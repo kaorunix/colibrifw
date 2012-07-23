@@ -15,8 +15,8 @@ GET     /User/Create                org.colibrifw.controllers.UserAdministration
 #POST    /User/Modify                org.colibrifw.controllers.UserAdministration.modify
 #GET     /User/Delete                org.colibrifw.controllers.UserAdministration.index
 #POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
-#GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.index
-#GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.index
+GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.index
+GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.index
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

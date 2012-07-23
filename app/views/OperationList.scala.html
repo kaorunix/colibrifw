@@ -1,0 +1,18 @@
+@(operation: org.colibrifw.common.models.Operation)
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+<tr>
+  <td>@operation.identifier</td>
+  <td>@operation.menu_message</td>
+  <td>@operation.description.getOrElse("")</td>
+  <td>@operation.order</td>
+  <td>@operation.create_date</td>
+  <td>@operation.update_date.getOrElse("")</td>
+  <td>@operation.update_user.get.name</td>
+  <td>@operation.owner_organization.get.name</td>
+  <td>@operation.status.get.name</td>
+</tr>
+
