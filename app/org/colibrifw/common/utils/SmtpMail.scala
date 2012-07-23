@@ -17,27 +17,27 @@ class SmtpMail(
     ) {
   val props = new Properties
   props.put("mail.smtp.host", smtpHost)
-  // SMTP”FØ
+  // SMTPã‚µãƒ¼ãƒã®è¨­å®š
   props.setProperty("mail.smtp.auth", "true")
   val session = Session.getDefaultInstance(props, null)
 
   def sendMail(toAddress:String, subject:String, body:String, header:Map[String, String])= {
 	val msg = new MimeMessage(session)
-	// ‘—Mæ‚Ìİ’è
+	//é€ä¿¡å…ˆã®è¨­å®š
 	msg.setRecipient(Message.RecipientType.TO,
 	    new InternetAddress(toAddress)
 	)
-	// ‘—MŒ³‚Ìİ’è
+	//é€ä¿¡å…ƒã®è¨­å®š
 	msg.setFrom(new InternetAddress(fromAddress))
-	// ‘—M“ú•t‚Ìİ’è
+	//é€ä¿¡æ—¥ä»˜ã®è¨­å®š
 	msg.setSentDate(new Date)
-	// ƒwƒbƒ_‚Ìİ’è
+	//ãƒ˜ãƒƒãƒ€ã®è¨­å®š
 	header.map(a => msg.setHeader(a._1, a._2))
-	// Subject‚Ìİ’è
+	// Subjectã®è¨­å®š
 	msg.setSubject(subject, charset)
-	// –{•¶
+	//æœ¬æ–‡ã®è¨­å®š
 	msg.setText(body, charset)
-	// ƒ[ƒ‹‘—M
+	//ãƒ¡ãƒ¼ãƒ«é€ä¿¡
 	val tp = session.getTransport("smtp")
 	tp.connect(smtpHost, account, password)
 	tp.sendMessage(msg,
