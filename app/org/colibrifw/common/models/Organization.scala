@@ -5,6 +5,7 @@ import anorm.SqlParser._
 import play.api.db.DB
 import play.api.Play.current
 import java.util.Date
+import play.api.i18n.Messages
 
 case class Organization(
 		id:Pk[Int],
@@ -42,5 +43,9 @@ object Organization {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(Organization.simple *)
 	}
+  }
+  // FormのSelect向けSeqを返却
+  def allSelect():Seq[Pair[String, String]] = {
+    all().map(a => (a.id.get.toString, Messages("Organization." + a.name)))
   }
 }

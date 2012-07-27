@@ -8,8 +8,10 @@ import org.colibrifw.common.forms.LoginForm
 import org.colibrifw.common.utils._
 import org.colibrifw.common.models.User
 import jp.t2v.lab.play20.auth.LoginLogout
+import cache.Cache
+import Play.current
 
-object Login extends Controller with LoginLogout with AuthConfigImpl{
+object Login extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
 
   val loginForm = Form(
     mapping(
@@ -27,7 +29,8 @@ object Login extends Controller with LoginLogout with AuthConfigImpl{
       User.findUserByLoginForm(login) match {
         case Some(user:User) => {
           gotoLoginSucceeded(user.id.get)
-          Ok(views.html.Info(login))
+          // 自分を特定する
+          Ok(views.html.Info(user)).withSession("loginUser" -> user.id.get.toString)
         }
        case _ => BadRequest(views.html.loginForm(loginForm))
       }

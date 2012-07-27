@@ -5,6 +5,7 @@ import anorm.SqlParser._
 import play.api.db.DB
 import play.api.Play.current
 import java.util.Date
+import play.api.i18n.Messages
 
 case class TimeZone(
     id:Pk[Int],
@@ -32,5 +33,14 @@ object TimeZone {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM TimeZone WHERE ID={id}").on("id" -> id).as(TimeZone.simple.singleOpt)
 	}
+  }
+    def all():Seq[TimeZone] = {
+	DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM TimeZone order by id").as(this.simple *)
+	}
+  }
+  // FormのSelect向けSeqを返却
+  def allSelect():Seq[Pair[String, String]] = {
+    all.map(a => (a.id.get.toString, Messages("TimeZone." + a.name)))
   }
 }

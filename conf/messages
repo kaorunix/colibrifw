@@ -15,6 +15,9 @@ Common.Modify=Modify
 Common.User=User
 Common.Organization=Organization
 Common.Operation=Operation
+Common.create_date=Create Date
+Common.update_date=Update Date
+Common.update_user=Update User
 login.title=Login
 login.email=Email
 login.email.placeholder=Email
@@ -22,11 +25,17 @@ login.password=Password
 login.password.placeholder=Password
 login.password.incorrect=Incorrect
 
+User.title=User Administration
 User.account=Email
 User.password=Password
 User.password.confirm=Password(confirm)
 User.name=Name
 User.description=Description
+User.organization=Organization
+User.country=Country
+User.lang=Lang
+User.locale=Locale
+User.timezone=TimeZone
 
 #Organization.name=
 #Organization.description
@@ -35,12 +44,31 @@ User.description=Description
 #Locale.name=
 #Country.name=
 Status.title=Status
-Status.Approve=Approve
-Status.Created=Created
-Status.Modified=Modified
-Statsu.Deleted=Deleted
+Status.app=Approve
+Status.cre=Created
+Status.mod=Modified
+Statsu.del=Deleted
+Statsu.exp=Expired
+Statsu.notex=Not Exists
 
-operation.user=User Management
-operation.organization=Organization Management
-operation.operation=Operation
+Organization.title=Organization Administration
+Organization.name=Name
+Organization.description=Description
+
+Operation.title=Operation Administration
+Operation.user=User Management
+Operation.organization=Organization Management
+Operation.operation=Operation
+Operation.identifier=Identifier
+Operation.menu_message=Message Name
+Operation.description=Description
+Operation.order=Order
+Operation.owner_organization=Organization
+Operation.status=Status
+
+Lang.en=English
+Lang.ja=Japanese
+Lang.es=Spanish
+
+
 

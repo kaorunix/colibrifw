@@ -8,6 +8,7 @@ import org.colibrifw.common._
 import forms.LoginForm
 import java.util.Date
 import org.colibrifw.common.utils.Encryption
+import org.colibrifw.common.forms.UserForm
 
 case class User(
     id:Pk[Int],
@@ -76,9 +77,19 @@ object User {
 	  SQL("SELECT * FROM User WHERE account={account} AND password={password_encoded}").on("account" -> login.account, "password_encoded" -> Encryption.encript(login.password)).as(User.simple.singleOpt)
 	}
   }
+  def findUserByUserForm(user:UserForm):Option[User] = {
+	DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM User WHERE account={account}").on("account" -> user.account).as(User.simple.singleOpt)
+	}
+  }
   def all(order:String="id"):Seq[User] = {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM User WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
+	}
+  }
+  def allo(organization_id:Int, order:String="id"):Seq[User] = {
+	DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM User, Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
 	}
   }
 }

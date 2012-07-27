@@ -4,6 +4,7 @@ import anorm._
 import anorm.SqlParser._
 import play.api.db.DB
 import play.api.Play.current
+import play.api.i18n.Messages
 
 case class Lang(
     id:Pk[Int],
@@ -26,10 +27,14 @@ object Lang {
 	  SQL("SELECT * FROM LANG WHERE ID={id}").on("id" -> id).as(Lang.simple.singleOpt)
 	}
   }
-  /*def all():Seq[Locale] = {
+  def all():Seq[Lang] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM Locale order by id").as(Locale.simple)
+	  SQL("SELECT * FROM Lang order by id").as(Lang.simple *)
 	}
-  }*/
+  }
+  // FormのSelect向けSeqを返却
+  def allSelect():Seq[Pair[String, String]] = {
+    all.map(a => (a.id.get.toString, Messages("Lang." + a.name)))
+  }
 
 }

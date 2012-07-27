@@ -4,20 +4,23 @@
 @import play.api.i18n.Messages
 @import org.colibrifw.controllers._
 
-@main("UserAdministration") {
+@main(Messages("User.title")) {
   <div class="container">
   <div class="hero-unit">
     <H1>@Messages("Common.User")</H1>
     <table border=1>
       <tr>
-	<th>account</th>
-	<th>name</th>
-	<th>description</th>
-	<th>organization</th>
-	<th>lang</th>
-	<th>timezone</th>
-	<th>locale</th>
-	<th>country</th>
+	<th>@Messages("User.account")</th>
+	<th>@Messages("User.name")</th>
+	<th>@Messages("User.description")</th>
+	<th>@Messages("User.organization")</th>
+	<th>@Messages("User.lang")</th>
+	<th>@Messages("User.timezone")</th>
+	<th>@Messages("User.locale")</th>
+	<th>@Messages("User.country")</th>
+	<th>@Messages("Common.create_date")</th>
+	<th>@Messages("Common.update_date")</th>
+	<th>@Messages("Common.update_user")</th>
       </tr>
       @users.map(user => UserList(user))
     </table>

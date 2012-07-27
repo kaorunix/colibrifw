@@ -4,6 +4,7 @@ import anorm._
 import anorm.SqlParser._
 import play.api.db.DB
 import play.api.Play.current
+import play.api.i18n.Messages
 
 case class Country(
     id:Pk[Int],
@@ -25,4 +26,14 @@ object Country {
 	  SQL("SELECT * FROM Country WHERE ID={id}").on("id" -> id).as(Country.simple.singleOpt)
 	}
   }
+  def all():Seq[Country] = {
+   	DB.withConnection { implicit c =>
+   	  SQL("SELECT * FROM Country order by id").as(Country.simple *)
+   	}
+  }
+  // FormのSelect向けSeqを返却
+  def allSelect():Seq[Pair[String, String]] = {
+    all.map(a => (a.id.get.toString, Messages("Country." + a.name)))
+  }
+
 }

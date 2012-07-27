@@ -4,21 +4,21 @@
 @import play.api.i18n.Messages
 @import org.colibrifw.controllers._
 
-@main("OperationAdministration") {
+@main(Messages("Operation.titile")) {
   <div class="container">
   <div class="hero-unit">
     <H1>@Messages("Common.Operation")</H1>
     <table border=1>
       <tr>
-	<th>identifier</th>
-	<th>menu_message</th>
-	<th>description</th>
-	<th>order</th>
-	<th>create_date</th>
-	<th>update_date</th>
-	<th>update_user</th>
-	<th>owner_organization</th>
-	<th>status</th>
+	<th>@Messages("Operation.identifier")</th>
+	<th>@Messages("Operation.menu_message")</th>
+	<th>@Messages("Operation.description")</th>
+	<th>@Messages("Operation.order")</th>
+	<th>@Messages("Common.create_date")</th>
+	<th>@Messages("Common.update_date")</th>
+	<th>@Messages("Common.update_user")</th>
+	<th>@Messages("Operation.owner_organization")</th>
+	<th>@Messages("Operation.status")</th>
       </tr>
       @oprs.map(opr => OperationList(opr))
     </table>

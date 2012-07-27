@@ -9,8 +9,7 @@ import org.colibrifw.common.utils._
 import org.colibrifw.common.models.User
 import jp.t2v.lab.play20.auth.LoginLogout
 
-object UserAdministration extends Controller with LoginLogout with AuthConfigImpl{
-
+object UserAdministration extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
   val userForm = Form(
     mapping(
       "account" -> nonEmptyText,
@@ -25,23 +24,26 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
       "country_id" -> number
     )(UserForm.apply)(UserForm.unapply)
   )
-  def index = Action {
+  def list = Action {
     val users=User.all()
     Ok(views.html.UserAdministrationList(users))
   }
-  def create = TODO /*Action { implicit request =>
+  def index = Action {
+    val users=User.all()
+    Ok(views.html.UserAdministrationCreate(userForm))
+  }
+  def create = Action { implicit request =>
   	userForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.UserAdministrationForm(errors)),
-    login => {
-      User.findUserByLoginForm(login) match {
+    errors => BadRequest(views.html.UserAdministrationCreate(errors)),
+    user => {
+      User.findUserByUserForm(user) match {
         case Some(user:User) => {
-          gotoLoginSucceeded(user.id.get)
-          Ok(views.html.Info(login))
+          Ok(views.html.Info(user))
         }
-       case _ => BadRequest(views.html.loginForm(loginForm))
+       case _ => BadRequest(views.html.UserAdministrationCreate(userForm))
       }
     })
-  }*/
+  }
   def delete = TODO/*Action {implicit request =>
     gotoLogoutSucceeded
   }*/

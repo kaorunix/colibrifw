@@ -4,18 +4,18 @@
 @import play.api.i18n.Messages
 @import org.colibrifw.controllers._
 
-@main("OrganizationAdministration") {
+@main(Messages("Organization.titile")) {
   <div class="container">
   <div class="hero-unit">
     <H1>@Messages("Common.Organization")</H1>
     <table border=1>
       <tr>
-	<th>name</th>
-	<th>description</th>
-	<th>create_date</th>
-	<th>update_date</th>
-	<th>update_user</th>
-	<th>status</th>
+	<th>@Messages("Organization.name")</th>
+	<th>@Messages("Organization.description")</th>
+	<th>@Messages("Organization.create_date")</th>
+	<th>@Messages("Organization.update_date")</th>
+	<th>@Messages("Organization.update_user")</th>
+	<th>@Messages("Organization.status")</th>
       </tr>
       @orgs.map(org => OrganizationList(org))
     </table>

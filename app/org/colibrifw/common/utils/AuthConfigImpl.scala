@@ -82,6 +82,4 @@ trait AuthConfigImpl extends AuthConfig {
       case (NormalUser, NormalUser) => true
       case _ => false
     }*/
-
-
 }
