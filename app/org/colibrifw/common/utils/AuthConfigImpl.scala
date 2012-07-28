@@ -6,7 +6,7 @@ import play.api.mvc.PlainResult
 import play.api.mvc.Request
 import play.api.mvc.Results._
 import org.colibrifw.controllers.routes
-
+import play.api.mvc.Session
 
 trait AuthConfigImpl extends AuthConfig {
   /**
@@ -57,7 +57,7 @@ trait AuthConfigImpl extends AuthConfig {
    * ログアウトが成功した際に遷移する先を指定します。
    */
   def logoutSucceeded[A](request: Request[A]): PlainResult =
-    Redirect(routes.Login.index)
+    Redirect(routes.Login.index).withSession(request.session - "loginUser")
 
   /**
    * 認証が失敗した場合に遷移する先を指定します。

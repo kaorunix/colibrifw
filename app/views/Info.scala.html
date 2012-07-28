@@ -4,18 +4,16 @@
 <div class="navbar navbar-fixed-top">
   <div class="navbar-inner">
     <div class="container">
-      <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
+@*      <button class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse" type="button">
 	<span class="icon-bar"></span>
 	<span class="icon-bar"></span>
-      </button>
+      </button> *@
 
-@*      <div class="hero-unit"> *@
+
 @* MAIN MENU START *@
-  <div class="nav-collapse collapse">
-@*    <ul class="nav nav-tabs">*@
-  <ul class="nav nav-pills">
-    <li class="dropdown" id="info">
-      <a class="dropdown-toggle" data-toggle="dropdown" href="#info">
+  <ul class="nav">
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
 	Info
 	<b class="caret"></b>
       </a>
@@ -26,13 +24,35 @@
 	<li><a href="#">Apporove</a></li>
       </ul>
     </li>
-    <li class="dropdown"><a href="/User/Lists" data-toggle="tab">User Admin</a></li>
-    <li class="dropdown"><a href="/Organization/Lists" data-toggle="tab">Organization Admin</a></li>
-    <li><a href="#operation" data-toggle="tab">/Operation/Lists</a></li>
-    <li><a href="logout" data-toggle="tab">Logout</a></li>
+    <li class="dropdown">
+      <a class="dropdown-toggle" href="#User" data-toggle="dropdown">User Admin<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+	<li class="active"><a href="/User/Create/">Create</a></li>
+	<li><a href="/User/Lists">List</a></li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="#Organization" class="dropdown-toggle" data-toggle="dropdown">Organization Admin<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+	<li class="active"><a href="/Organization/Create/">Create</a><li>
+	<li><a href="/Organization/Lists">Lists</a></li>
+      </ul>
+    </li>
+    <li class="dropdown">
+      <a href="#Operation" class="dropdown-toggle" data-toggle="dropdown">Operation Admin<b class="caret"></b></a>
+      <ul class="dropdown-menu">
+	<li class="active"><a href="/Operation/Create">Create</a><li>
+	<li><a href="/Operation/Lists">Lists</a></li>
+      </ul>
+    </li>
+  </ul>
+  <ul class="nav pull-right">
+    <li><a href="/logout" data-toggle="tab">Logout</a></li>
   </ul>
 @* MAIN MENU END *@
-</div>
+    </div><!-- container -->
+
+<div class="container">
 @* BREADCRUMB Start *@
 <ul class="breadcrumb">
   <li>
@@ -40,6 +60,7 @@
   </li>
 </ul>
 @* BREADCRUMB End *@
+
 </div>
       <div class="container">
   <div class="row">
@@ -65,5 +86,8 @@
 
 	  </div>
 	</div>
+  <script type="text/javascript">
+@*    $('.dropdown-toggle').dropdown() *@
+  </script> 
 }
 
