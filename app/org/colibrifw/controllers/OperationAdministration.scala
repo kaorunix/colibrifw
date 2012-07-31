@@ -9,9 +9,9 @@ import org.colibrifw.common.utils._
 import org.colibrifw.common.models.Operation
 import jp.t2v.lab.play20.auth.LoginLogout
 
-object OperationAdministration extends Controller with LoginLogout with AuthConfigImpl{
+object OperationAdministration extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
 
-  val userForm = Form(
+  val oprForm = Form(
     mapping(
       "identifier" -> nonEmptyText,
 	  "menu_message" -> nonEmptyText,
@@ -20,11 +20,25 @@ object OperationAdministration extends Controller with LoginLogout with AuthConf
 	  "owner_organization_id" -> number
     )(OperationForm.apply)(OperationForm.unapply)
   )
-  def index = Action {
-    val orgs=Operation.all()
-    Ok(views.html.OperationAdministrationList(orgs))
+  def list = Action {
+    val oprs=Operation.all()
+    Ok(views.html.OperationAdministrationList(oprs))
   }
-  def create = TODO /*Action { implicit request =>
+  def index = Action {
+    Ok(views.html.OperationAdministrationCreate(oprForm))
+  }
+
+  def create = Action { implicit request =>
+  	oprForm.bindFromRequest.fold(
+	  errors => BadRequest(views.html.OperationAdministrationCreate(errors)),
+	  oprs => {
+		Operation.insert(oprs, loginUser.id.get) match {
+          case 1 => Redirect(routes.OperationAdministration.list)
+          case _ => BadRequest(views.html.OperationAdministrationCreate(oprForm))
+		}
+	  })
+  }
+/*  def create = TODO*/ /*Action { implicit request =>
   	userForm.bindFromRequest.fold(
     errors => BadRequest(views.html.UserAdministrationForm(errors)),
     login => {

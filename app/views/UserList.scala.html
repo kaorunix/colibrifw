@@ -14,7 +14,7 @@
   <td>@user.locale.get.name</td>
   <td>@user.country.get.name</td>
   <td>@user.create_date</td>
-  <td>@user.update_date.get</td>
+  <td>@user.update_date.getOrElse("")</td>
   <td>@* user.update_user.get.name *@</td>
 </tr>
 

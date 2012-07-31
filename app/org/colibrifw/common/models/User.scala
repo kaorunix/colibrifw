@@ -26,11 +26,13 @@ case class User(
     status_id:Int,
     update_user_id:Int
     ) extends Model {
-	val lang = Lang(lang_id)
-	val timezone = TimeZone(timezone_id)
-	val locale = Locale(locale_id)
-	val country = Country(country_id)
-	val organization = Organization(organization_id)
+	def lang = Lang(lang_id)
+	def timezone = TimeZone(timezone_id)
+	def locale = Locale(locale_id)
+	def country = Country(country_id)
+	def organization = Organization(organization_id)
+	def status = Status(status_id)
+	def update_user = User.findUserNameById(update_user_id)
 }
 
 object User {
@@ -72,14 +74,52 @@ object User {
 	  SQL("SELECT * FROM User WHERE ID={id}").on("id" -> id).as(User.simple.singleOpt)
 	}
   }
+/*  def apply(
+    account:String,
+    name:String,
+    description:Option[String],
+    password:String,
+    organization_id:Int,
+    lang_id:Int,
+    timezone_id:Int,
+    locale_id:Int,
+    country_id:Int,
+    status_id:Int,
+    update_user_id:Int
+      ):User = User(
+    account=account,
+    name=name,
+    description=description,
+    password=password,
+    organization_id=organization_id,
+    lang_id=lang_id,
+    timezone_id=timezone_id,
+    locale_id=locale_id,
+    status_id=status_id,
+    update_user_id=update_user_id
+)*/
+  def findUserNameById(id:Int):Option[String] = {
+	/*val user = DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM User WHERE ID={id}").on("id" -> id).as(User.simple.singleOpt)
+	}*/
+	apply(id) match {
+	  case Some(u) => Some(u.name)
+	  case _ => None
+	}
+  }
   def findUserByLoginForm(login:LoginForm):Option[User] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM User WHERE account={account} AND password={password_encoded}").on("account" -> login.account, "password_encoded" -> Encryption.encript(login.password)).as(User.simple.singleOpt)
+	  SQL("SELECT * FROM User WHERE account={account} AND password={password_encoded}")
+  	    .on("account" -> login.account, "password_encoded" -> Encryption.encript(login.password))
+	    .as(User.simple.singleOpt)
 	}
   }
   def findUserByUserForm(user:UserForm):Option[User] = {
+    findUserByAccount(user.account)
+  }
+  def findUserByAccount(account:String):Option[User] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM User WHERE account={account}").on("account" -> user.account).as(User.simple.singleOpt)
+	  SQL("SELECT * FROM User WHERE account={account}").on("account" -> account).as(User.simple.singleOpt)
 	}
   }
   def all(order:String="id"):Seq[User] = {
@@ -91,5 +131,79 @@ object User {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM User, Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
 	}
+  }
+  def insert(user:UserForm, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    //TODO create_dateのトリガーがうまく動かないため一時的にinsert文で設定
+    DB.withConnection { implicit c =>
+      SQL("""
+          insert into User (account, name, description, password, organization_id, lang_id, timezone_id, locale_id, country_id, create_date, update_user_id, status_id)
+          values ({account}, {name}, {description}, {password}, {organization_id}, {lang_id}, {timezone_id}, {locale_id}, {country_id},sysdate(),{update_user_id}, {status_id})
+          """)
+          .on("account" -> user.account,
+        	  "name" -> user.name,
+        	  "description" -> user.description,
+        	  "password" -> Encryption.encript(user.password),
+        	  "organization_id" -> user.organization_id,
+        	  "lang_id" -> user.lang_id,
+        	  "timezone_id" -> user.timezone_id,
+        	  "locale_id" -> user.locale_id,
+        	  "country_id" -> user.country_id,
+              "update_user_id" -> update_user_id,
+              "status_id" -> 1)
+              .executeUpdate()
+    }
+  }
+  def update(user:UserForm, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    DB.withConnection { implicit c =>
+      SQL("""
+          update User set
+            account={account}, name={name}, description={description},
+            password={password},
+            organization_id={organization_id}, lang_id={lang_id},
+            timezone_id={timezone_id}, locale_id={locale_id},
+            country_id={country_id}, update_user_id={update_user_id},
+            status_id={status_id})
+          """)
+          .on("account" -> user.account,
+        	  "name" -> user.name,
+        	  "description" -> user.description,
+        	  "password" -> Encryption.encript(user.password),
+        	  "organization_id" -> user.organization_id,
+        	  "lang_id" -> user.lang_id,
+        	  "timezone_id" -> user.timezone_id,
+        	  "locale_id" -> user.locale_id,
+        	  "country_id" -> user.country_id,
+              "update_user_id" -> update_user_id,
+              "status_id" -> 1)
+              .executeUpdate()
+    }
+  }
+  def updateWithPassword(user:UserForm, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    DB.withConnection { implicit c =>
+      SQL("""
+          update User set
+            account={account}, name={name}, description={description},
+            password={password},
+            organization_id={organization_id}, lang_id={lang_id},
+            timezone_id={timezone_id}, locale_id={locale_id},
+            country_id={country_id}, update_user_id={update_user_id},
+            status_id={status_id})
+          """)
+          .on("account" -> user.account,
+        	  "name" -> user.name,
+        	  "description" -> user.description,
+        	  "password" -> Encryption.encript(user.password),
+        	  "organization_id" -> user.organization_id,
+        	  "lang_id" -> user.lang_id,
+        	  "timezone_id" -> user.timezone_id,
+        	  "locale_id" -> user.locale_id,
+        	  "country_id" -> user.country_id,
+              "update_user_id" -> update_user_id,
+              "status_id" -> 1)
+              .executeUpdate()
+    }
   }
 }

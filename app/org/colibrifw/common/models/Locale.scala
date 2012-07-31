@@ -33,6 +33,6 @@ object Locale {
   }
   // FormのSelect向けSeqを返却
   def allSelect():Seq[Pair[String, String]] = {
-    all.map(a => (a.id.get.toString, Messages("Locale." + a.name)))
+    all.map(a => (a.id.get.toString, Messages("Locale." + a.arconym)))
   }
 }

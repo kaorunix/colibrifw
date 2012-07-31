@@ -1,0 +1,24 @@
+@(oprForm:Form[org.colibrifw.common.forms.OperationForm])
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+@import org.colibrifw.common.models._
+
+@main("OperationAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@{Messages("Common.Operation") + " - (" + Messages("Common.Create")}</H1>
+    @helper.form(action = routes.OperationAdministration.create) {
+      <fieldset>
+	@inputText(oprForm("identifier"), '_label -> Messages("Operation.identifier"))
+	@inputText(oprForm("menu_message"), '_label -> Messages("Operation.menu_message"))
+	@inputText(oprForm("description"), '_label -> Messages("Operation.description"))
+	@inputText(oprForm("order"), '_label -> Messages("Operation.order"))
+	@select(oprForm("owner_organization_id"),Organization.allSelect , '_label -> Messages("Common.organization"))
+      </fieldset>
+      <input type="submit" class="btn primary" value="@Messages("Common.Create")"> 
+    }  
+  </div>
+  </div>
+}

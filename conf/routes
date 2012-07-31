@@ -11,13 +11,16 @@ GET     /info                       org.colibrifw.controllers.Info.index
 GET     /User/Lists                 org.colibrifw.controllers.UserAdministration.list
 GET     /User/Create                 org.colibrifw.controllers.UserAdministration.index
 POST    /User/Create                org.colibrifw.controllers.UserAdministration.create
-#POST    /User/Create                org.colibrifw.controllers.UserAdministration.create
-#GET     /User/Modify                org.colibrifw.controllers.UserAdministration.index
-#POST    /User/Modify                org.colibrifw.controllers.UserAdministration.modify
+GET     /User/Modify/:id             org.colibrifw.controllers.UserAdministration.modifyById(id)
+POST    /User/Modify             org.colibrifw.controllers.UserAdministration.modify
 #GET     /User/Delete                org.colibrifw.controllers.UserAdministration.index
 #POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
-GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.index
-GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.index
+GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.list
+GET     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.index
+POST     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.create
+GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.list
+GET     /Operation/Create             org.colibrifw.controllers.OperationAdministration.index
+POST     /Operation/Create             org.colibrifw.controllers.OperationAdministration.create
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

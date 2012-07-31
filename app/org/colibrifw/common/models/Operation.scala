@@ -5,6 +5,7 @@ import anorm._
 import anorm.SqlParser._
 import play.api.db.DB
 import play.api.Play.current
+import org.colibrifw.common.forms.OperationForm
 
 case class Operation(
     id:Pk[Int],
@@ -58,5 +59,24 @@ object Operation {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM Operation WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(Operation.simple *)
 	}
+  }
+  def insert(opr:OperationForm, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    println("OperationForm=" + opr.toString())
+    //TODO create_dateのトリガーがうまく動かないため一時的にinsert文で設定
+    DB.withConnection { implicit c =>
+      SQL("""
+          insert into Operation (identifier, menu_message, description, Operation.order, create_date, update_user_id, owner_organization_id, status_id)
+          values ({identifier}, {menu_message}, {description}, {order}, sysdate(), {update_user_id}, {owner_organization_id}, {status_id})
+          """)
+          .on("identifier" -> opr.identifier,
+              "menu_message" -> opr.menu_message,
+        	  "description" -> opr.description.getOrElse(""),
+        	  "order" -> opr.order,
+        	  "update_user_id" -> update_user_id,
+        	  "owner_organization_id" -> opr.owner_organization_id,
+        	  "status_id" -> 1)
+              .executeUpdate()
+    }
   }
 }

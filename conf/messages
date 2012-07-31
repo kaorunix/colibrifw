@@ -12,9 +12,9 @@ Common.Submit=Submit
 Common.Create=Create
 Common.Delete=Delete
 Common.Modify=Modify
-Common.User=User
-Common.Organization=Organization
-Common.Operation=Operation
+Common.user=User
+Common.organization=Organization
+Common.operation=Operation
 Common.create_date=Create Date
 Common.update_date=Update Date
 Common.update_user=Update User
@@ -54,6 +54,8 @@ Statsu.notex=Not Exists
 Organization.title=Organization Administration
 Organization.name=Name
 Organization.description=Description
+Organization.anonymous=Anonymous
+Organization.colibri=COLIBRÍ
 
 Operation.title=Operation Administration
 Operation.user=User Management
@@ -70,5 +72,14 @@ Lang.en=English
 Lang.ja=Japanese
 Lang.es=Spanish
 
+Country.jp=Japan
+Country.us=United States
+Country.ni=Nicaragua
 
+Locale.JP=Japanese
+Locale.US=United States
+Locale.NI=Nicaragua
+
+TimeZone.JST=Japan Standard Time
+TimeZone.CST=Central Standard Time
 

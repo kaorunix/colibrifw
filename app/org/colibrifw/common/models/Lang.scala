@@ -34,7 +34,7 @@ object Lang {
   }
   // FormのSelect向けSeqを返却
   def allSelect():Seq[Pair[String, String]] = {
-    all.map(a => (a.id.get.toString, Messages("Lang." + a.name)))
+    all.map(a => (a.id.get.toString, Messages("Lang." + a.acronym)))
   }
 
 }
