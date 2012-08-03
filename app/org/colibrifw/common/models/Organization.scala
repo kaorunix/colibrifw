@@ -6,7 +6,7 @@ import play.api.db.DB
 import play.api.Play.current
 import java.util.Date
 import play.api.i18n.Messages
-import org.colibrifw.common.forms.OrganizationForm
+import org.colibrifw.common.forms.{OrganizationCreateForm, OrganizationModifyForm, OrganizationIdForm}
 
 case class Organization(
 		id:Pk[Int],
@@ -48,7 +48,7 @@ object Organization {
   def allSelect():Seq[Pair[String, String]] = {
     all().map(a => (a.id.get.toString, Messages("Organization." + a.name)))
   }
-  def insert(orgf:OrganizationForm, update_user_id:Int):Int = {
+  def insert(orgf:OrganizationCreateForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
     //TODO create_dateのトリガーがうまく動かないため一時的にinsert文で設定
     DB.withConnection { implicit c =>
@@ -63,4 +63,22 @@ object Organization {
               .executeUpdate()
     }
   }
+  def update(orgf:OrganizationModifyForm, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    DB.withConnection { implicit c =>
+      SQL("""
+          update Organization set
+            name={name}, description={description},
+    		update_user_id={update_user_id}, status_id={status_id}
+            where id={id}
+          """)
+          .on("id" -> orgf.organization.id,
+              "name" -> orgf.organization.name,
+        	  "description" -> orgf.description,
+              "update_user_id" -> update_user_id,
+              "status_id" -> 1)
+              .executeUpdate()
+    }
+  }
+
 }

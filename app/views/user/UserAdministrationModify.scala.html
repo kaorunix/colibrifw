@@ -1,4 +1,4 @@
-@(userFormIn:Form[org.colibrifw.common.forms.UserForm])
+@(userFormIn:Form[org.colibrifw.common.forms.UserModifyForm])
 @import helper._
 @import helper.twitterBootstrap._
 @import play.api.i18n.Messages
@@ -9,20 +9,21 @@
   <div class="container">
   <div class="hero-unit">
     <H1>@{Messages("Common.User") + " - (" + Messages("Common.Modify")}</H1>
-    @helper.form(action = routes.UserAdministration.create) {
+    @helper.form(action = routes.UserAdministration.modify) {
       <fieldset>
-	<div>@Messages("User.account") @userFormIn.get.account</div>
+	<input type=hidden name="account.id" value="@userFormIn.get.account.id">
+	@inputText(userFormIn("account.account"), '_label -> Messages("User.account"))
 	@inputText(userFormIn("name"), '_label -> Messages("User.name"))
 	@inputText(userFormIn("description"), '_label -> Messages("User.description"))
-	@inputPassword(userFormIn("password"), '_label -> Messages("User.password"))
-	@inputPassword(userFormIn("password_confirm"), '_label -> Messages("User.password.confirm"))
+	@inputPassword(userFormIn("password.main"), '_label -> Messages("User.password"))
+	@inputPassword(userFormIn("password.confirm"), '_label -> Messages("User.password.confirm"))
 	@select(userFormIn("organization_id"),Organization.allSelect , '_label -> Messages("Common.organization"))
 	@select(userFormIn("lang_id"), Lang.allSelect, '_label -> Messages("Common.lang"))
 	@select(userFormIn("timezone_id"), TimeZone.allSelect, '_label -> Messages("Common.timezone"))
 	@select(userFormIn("locale_id"), Locale.allSelect, '_label -> Messages("Common.locale"))
 	@select(userFormIn("country_id"), Country.allSelect, '_label -> Messages("Common.country"))
       </fieldset>
-      <input type="submit" class="btn primary" value="@Messages("Common.Create")"> 
+      <input type="submit" class="btn primary" value="@Messages("Common.Modify")"> 
     }  
   </div>
   </div>

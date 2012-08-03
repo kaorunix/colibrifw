@@ -5,15 +5,19 @@ import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation._
-import org.colibrifw.common.forms.UserForm
+import org.colibrifw.common.forms.UserCreateForm
+import org.colibrifw.common.forms.UserModifyForm
+import org.colibrifw.common.forms.UserPasswordForm
+import org.colibrifw.common.forms.UserPasswordFormOp
+import org.colibrifw.common.forms.AccountForm
 import org.colibrifw.common.utils._
 import org.colibrifw.common.models.User
 import jp.t2v.lab.play20.auth.LoginLogout
 
 object UserAdministration extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
-  val userForm = Form(
+  val userCreateForm = Form(
     mapping(
-      "account" -> nonEmptyText.verifying(
+      "account" -> email.verifying(
           Constraints.pattern("""[a-zA-Z0-9\.\_\-]+[\@]+[a-zA-Z0-9\.\_\-]+""".r),
           Constraint[String]("User.account.exists") {
             case (a:String) if (User.findUserByAccount(a) != None) =>
@@ -23,38 +27,73 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
         ),
       "name" -> nonEmptyText,
       "description" -> optional(text),
-      "password" -> nonEmptyText,
-      "password_confirm" -> nonEmptyText,
+      "password" -> mapping(
+        "main" -> nonEmptyText,
+        "confirm" -> nonEmptyText)
+        (UserPasswordForm.apply)(UserPasswordForm.unapply)
+        .verifying("User.error.password.notmatch", pass => pass.main == pass.confirm),
       "organization_id" -> number,
       "lang_id" -> number,
       "timezone_id" -> number,
       "locale_id" -> number,
       "country_id" -> number
-    )(UserForm.apply)(UserForm.unapply)
+    )(UserCreateForm.apply)(UserCreateForm.unapply)
+  )
+  val userModifyForm = Form(
+    mapping(
+      "account" -> mapping(
+        "id" -> number,
+        "account" -> email.verifying(
+          Constraints.pattern("""[a-zA-Z0-9\.\_\-]+[\@]+[a-zA-Z0-9\.\_\-]+""".r)
+
+        ))
+        (AccountForm.apply)
+        (AccountForm.unapply).verifying(
+          Constraint[AccountForm]("User.account.exists") {
+            case (a:AccountForm) if (User.findUserByAccount(a.id, a.account) != None) =>
+              Invalid(ValidationError("User.error.account.exists"))
+            case _ => Valid
+          }
+        ),
+      "name" -> nonEmptyText,
+      "description" -> optional(text),
+      "password" -> mapping(
+        "main" -> optional(nonEmptyText),
+        "confirm" -> optional(nonEmptyText))
+        (UserPasswordFormOp.apply)(UserPasswordFormOp.unapply)
+        .verifying("User.error.password.notmatch", pass => pass.main == pass.confirm),
+      "organization_id" -> number,
+      "lang_id" -> number,
+      "timezone_id" -> number,
+      "locale_id" -> number,
+      "country_id" -> number
+    )
+    (UserModifyForm.apply)
+    (UserModifyForm.unapply)
   )
   def list = Action {
     val users=User.all()
-    Ok(views.html.UserAdministrationList(users))
+    Ok(views.html.user.UserAdministrationList(users))
   }
   def index = Action {
-    Ok(views.html.UserAdministrationCreate(userForm))
+    Ok(views.html.user.UserAdministrationCreate(userCreateForm))
   }
   def create = Action { implicit request =>
-  	userForm.bindFromRequest.fold(
-	  errors => BadRequest(views.html.UserAdministrationCreate(errors)),
+  	userCreateForm.bindFromRequest.fold(
+	  errors => BadRequest(views.html.user.UserAdministrationCreate(errors)),
 	  user => {
 		User.insert(user, loginUser.id.get) match {
           case 1 => Redirect(routes.UserAdministration.list)
-          case _ => BadRequest(views.html.UserAdministrationCreate(userForm))
+          case _ => BadRequest(views.html.user.UserAdministrationCreate(userCreateForm))
 		}
 	  })
   }
   def modifyById(id:String) = Action {
-	Ok(views.html.UserAdministrationModify(userForm.fill(mkUserForm(id.toInt))))
+	Ok(views.html.user.UserAdministrationModify(userModifyForm.fill(UserModifyForm.getUserModifyFormById(id.toInt))))
   }
   def modify() = Action { implicit request =>
-    userForm.bindFromRequest.fold(
-	  errors => BadRequest(views.html.UserAdministrationModify(errors)),
+    userModifyForm.bindFromRequest.fold(
+	  errors => BadRequest(views.html.user.UserAdministrationModify(errors)),
 	  user => {
 	    val r = if (user.password == "") {
 		  User.update(user, loginUser.id.get)
@@ -63,27 +102,27 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
 		}
 	    r match {
 		  case 1 => Redirect(routes.UserAdministration.list)
-		  case _ => BadRequest(views.html.UserAdministrationModify(userForm))
+		  case _ => BadRequest(views.html.user.UserAdministrationModify(userModifyForm))
 		}
 	  }
     )
   }
-  def mkUserForm(id:Int):UserForm = {
+ /* def mkUserForm(id:Int):UserModifyForm = {
     User(id) match {
-      case Some(user) => UserForm(
-          user.account,
+      case Some(user) => UserModifyForm(
+    	  user.account,
           user.name,
           Some(user.description.getOrElse("")),
-          "",
-          "",
+          None,
+          None,
           user.organization_id,
           user.lang_id,
           user.timezone_id,
           user.locale_id,
           user.country_id)
-      case _ => UserForm()
+      case _ => UserModifyForm()
     }
-  }
+  }*/
   def delete = TODO/*Action {implicit request =>
     gotoLogoutSucceeded
   }*/

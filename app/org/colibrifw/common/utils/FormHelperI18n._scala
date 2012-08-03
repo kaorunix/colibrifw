@@ -1,0 +1,5 @@
+package org.colibrifw.common.utils
+
+object FormHelperI18n {
+	implicit val formFields = FieldConstructor()
+}

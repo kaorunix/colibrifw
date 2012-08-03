@@ -8,7 +8,10 @@ import org.colibrifw.common._
 import forms.LoginForm
 import java.util.Date
 import org.colibrifw.common.utils.Encryption
-import org.colibrifw.common.forms.UserForm
+import org.colibrifw.common.forms.UserCreateForm
+import org.colibrifw.common.forms.UserModifyForm
+import anorm.NotAssigned
+import org.colibrifw.common.exceptions.IllegalParameterException
 
 case class User(
     id:Pk[Int],
@@ -74,30 +77,7 @@ object User {
 	  SQL("SELECT * FROM User WHERE ID={id}").on("id" -> id).as(User.simple.singleOpt)
 	}
   }
-/*  def apply(
-    account:String,
-    name:String,
-    description:Option[String],
-    password:String,
-    organization_id:Int,
-    lang_id:Int,
-    timezone_id:Int,
-    locale_id:Int,
-    country_id:Int,
-    status_id:Int,
-    update_user_id:Int
-      ):User = User(
-    account=account,
-    name=name,
-    description=description,
-    password=password,
-    organization_id=organization_id,
-    lang_id=lang_id,
-    timezone_id=timezone_id,
-    locale_id=locale_id,
-    status_id=status_id,
-    update_user_id=update_user_id
-)*/
+
   def findUserNameById(id:Int):Option[String] = {
 	/*val user = DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM User WHERE ID={id}").on("id" -> id).as(User.simple.singleOpt)
@@ -114,12 +94,17 @@ object User {
 	    .as(User.simple.singleOpt)
 	}
   }
-  def findUserByUserForm(user:UserForm):Option[User] = {
+  def findUserByUserCreateForm(user:UserCreateForm):Option[User] = {
     findUserByAccount(user.account)
   }
   def findUserByAccount(account:String):Option[User] = {
 	DB.withConnection { implicit c =>
 	  SQL("SELECT * FROM User WHERE account={account}").on("account" -> account).as(User.simple.singleOpt)
+	}
+  }
+  def findUserByAccount(id:Int, account:String):Option[User] = {
+	DB.withConnection { implicit c =>
+	  SQL("SELECT * FROM User WHERE account={account} and not id={id}").on("account" -> account, "id" -> id).as(User.simple.singleOpt)
 	}
   }
   def all(order:String="id"):Seq[User] = {
@@ -132,7 +117,7 @@ object User {
 	  SQL("SELECT * FROM User, Organization WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
 	}
   }
-  def insert(user:UserForm, update_user_id:Int):Int = {
+  def insert(user:UserCreateForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
     //TODO create_dateのトリガーがうまく動かないため一時的にinsert文で設定
     DB.withConnection { implicit c =>
@@ -143,7 +128,7 @@ object User {
           .on("account" -> user.account,
         	  "name" -> user.name,
         	  "description" -> user.description,
-        	  "password" -> Encryption.encript(user.password),
+        	  "password" -> Encryption.encript(user.password.main),
         	  "organization_id" -> user.organization_id,
         	  "lang_id" -> user.lang_id,
         	  "timezone_id" -> user.timezone_id,
@@ -154,22 +139,21 @@ object User {
               .executeUpdate()
     }
   }
-  def update(user:UserForm, update_user_id:Int):Int = {
+  def update(user:UserModifyForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
     DB.withConnection { implicit c =>
       SQL("""
           update User set
             account={account}, name={name}, description={description},
-            password={password},
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
             country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id})
+            status_id={status_id} where id={id}
           """)
-          .on("account" -> user.account,
+          .on("id" -> user.account.id,
+              "account" -> user.account.account,
         	  "name" -> user.name,
         	  "description" -> user.description,
-        	  "password" -> Encryption.encript(user.password),
         	  "organization_id" -> user.organization_id,
         	  "lang_id" -> user.lang_id,
         	  "timezone_id" -> user.timezone_id,
@@ -180,7 +164,7 @@ object User {
               .executeUpdate()
     }
   }
-  def updateWithPassword(user:UserForm, update_user_id:Int):Int = {
+  def updateWithPassword(user:UserModifyForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
     DB.withConnection { implicit c =>
       SQL("""
@@ -190,12 +174,18 @@ object User {
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
             country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id})
+            status_id={status_id} where id ={id}
           """)
-          .on("account" -> user.account,
+          .on("id" -> user.account.id,
+              "account" -> user.account.account,
         	  "name" -> user.name,
         	  "description" -> user.description,
-        	  "password" -> Encryption.encript(user.password),
+        	  "password" -> {
+        	    user.password.main match {
+        	      case Some(pass:String) => Encryption.encript(pass)
+        	      case _ => throw new IllegalParameterException("10001","password in not entered")
+        	    }
+        	  },
         	  "organization_id" -> user.organization_id,
         	  "lang_id" -> user.lang_id,
         	  "timezone_id" -> user.timezone_id,

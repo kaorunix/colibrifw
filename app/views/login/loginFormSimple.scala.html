@@ -1,0 +1,26 @@
+@(loginForm: Form[org.colibrifw.common.forms.LoginForm])(implicit lang: play.api.i18n.Lang)
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+
+@main("Login") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@Messages("login.title")</H1>
+    <form action="@routes.Login.login" method="POST">
+      @Messages("login.email"):
+      <input type="text" name="account" value="@loginForm("account").value"/>
+@*      @errors(loginForm("account")) *@
+      @Messages("login.password"):
+      <input type="password" name="password" value="@loginForm("password").value"/>
+@*      @errors(loginForm("password")) *@
+      <input type="submit" class="btn primary" value="Login"> 
+    </form>
+  </div>
+  </div>
+@*  @errors(field: Field) = {
+    @if(field.hasErrors) {
+      @field.errors.map(e =>
+        Messages(e.message, e.args: _*)).mkString(", ")
+    } 
+  } *@
+}

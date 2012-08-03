@@ -14,6 +14,6 @@ import org.colibrifw.common.utils.LoginUser
 object Info extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
 
   def index = Action { request =>
-    Ok(views.html.Info(loginUser(request)))
+    Ok(views.html.info.InfoWeb(loginUser(request)))
   }
 }

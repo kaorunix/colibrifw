@@ -1,4 +1,4 @@
-@(userFormIn:Form[org.colibrifw.common.forms.UserForm])
+@(userFormIn:Form[org.colibrifw.common.forms.UserCreateForm])
 @import helper._
 @import helper.twitterBootstrap._
 @import play.api.i18n.Messages
@@ -14,8 +14,8 @@
 	@inputText(userFormIn("account"), '_label -> Messages("User.account"))
 	@inputText(userFormIn("name"), '_label -> Messages("User.name"))
 	@inputText(userFormIn("description"), '_label -> Messages("User.description"))
-	@inputPassword(userFormIn("password"), '_label -> Messages("User.password"))
-	@inputPassword(userFormIn("password_confirm"), '_label -> Messages("User.password.confirm"))
+	@inputPassword(userFormIn("password.main"), '_label -> Messages("User.password"), '_help -> "input password.")
+	@inputPassword(userFormIn("password.confirm"), '_label -> Messages("User.password.confirm")) @* , '_error => userFormIn.error("password")) *@
 	@select(userFormIn("organization_id"),Organization.allSelect , '_label -> Messages("Common.organization"))
 	@select(userFormIn("lang_id"), Lang.allSelect, '_label -> Messages("Common.lang"))
 	@select(userFormIn("timezone_id"), TimeZone.allSelect, '_label -> Messages("Common.timezone"))
@@ -27,3 +27,4 @@
   </div>
   </div>
 }
+

@@ -10,6 +10,8 @@ import org.colibrifw.common.models.User
 import jp.t2v.lab.play20.auth.LoginLogout
 import cache.Cache
 import Play.current
+import views.html.login._
+import views.html.info._
 
 object Login extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
 
@@ -20,19 +22,19 @@ object Login extends Controller with LoginLogout with AuthConfigImpl with LoginU
     )(LoginForm.apply)(LoginForm.unapply)
   )
   def index = Action {
-    Ok(views.html.loginForm(loginForm))
+    Ok(loginWebForm(loginForm))
   }
   def login = Action { implicit request =>
   	loginForm.bindFromRequest.fold(
-    errors => BadRequest(views.html.loginForm(errors)),
+    errors => BadRequest(loginWebForm(errors)),
     login => {
       User.findUserByLoginForm(login) match {
         case Some(user:User) => {
           gotoLoginSucceeded(user.id.get)
           // 自分を特定する
-          Ok(views.html.Info(user)).withSession("loginUser" -> user.id.get.toString)
+          Ok(InfoWeb(user)).withSession("loginUser" -> user.id.get.toString)
         }
-       case _ => BadRequest(views.html.loginForm(loginForm))
+       case _ => BadRequest(loginWebForm(loginForm))
       }
     })
   }

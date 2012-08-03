@@ -1,0 +1,22 @@
+@(orgForm:Form[org.colibrifw.common.forms.OrganizationModifyForm])
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+@import org.colibrifw.common.models._
+
+@main("OrganizationAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@{Messages("Common.Organization") + " - (" + Messages("Common.Create")}</H1>
+    @helper.form(action = routes.OrganizationAdministration.modify) {
+      <fieldset>
+	<input type=hidden name=organization.id value="@orgForm.get.organization.id">
+	@inputText(orgForm("organization.name"), '_label -> Messages("Organization.name"))
+	@inputText(orgForm("description"), '_label -> Messages("Organization.description"))
+      </fieldset>
+      <input type="submit" class="btn primary" value="@Messages("Common.Modify")"> 
+    }  
+  </div>
+  </div>
+}

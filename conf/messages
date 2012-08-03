@@ -36,7 +36,8 @@ User.country=Country
 User.lang=Lang
 User.locale=Locale
 User.timezone=TimeZone
-
+User.error.account.exists=Account already existed
+User.error.password.notmatch=Password don't match
 #Organization.name=
 #Organization.description
 

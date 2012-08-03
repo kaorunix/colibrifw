@@ -18,6 +18,8 @@ POST    /User/Modify             org.colibrifw.controllers.UserAdministration.mo
 GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.list
 GET     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.index
 POST     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.create
+GET     /Organization/Modify/:id          org.colibrifw.controllers.OrganizationAdministration.modifyById(id)
+POST     /Organization/Modify          org.colibrifw.controllers.OrganizationAdministration.modify
 GET     /Operation/Lists             org.colibrifw.controllers.OperationAdministration.list
 GET     /Operation/Create             org.colibrifw.controllers.OperationAdministration.index
 POST     /Operation/Create             org.colibrifw.controllers.OperationAdministration.create
