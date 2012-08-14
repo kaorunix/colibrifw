@@ -12,6 +12,7 @@ import org.colibrifw.common.forms.UserCreateForm
 import org.colibrifw.common.forms.UserModifyForm
 import anorm.NotAssigned
 import org.colibrifw.common.exceptions.IllegalParameterException
+import org.colibrifw.common.exceptions.DaoException
 
 case class User(
     id:Pk[Int],
@@ -24,6 +25,7 @@ case class User(
     timezone_id:Int,
     locale_id:Int,
     country_id:Int,
+    approval_id:Int,
     create_date:Date,
     update_date:Option[Date],
     status_id:Int,
@@ -33,6 +35,7 @@ case class User(
 	def timezone = TimeZone(timezone_id)
 	def locale = Locale(locale_id)
 	def country = Country(country_id)
+	def approval = Approval(approval_id)
 	def organization = Organization(organization_id)
 	def status = Status(status_id)
 	def update_user = User.findUserNameById(update_user_id)
@@ -50,11 +53,13 @@ object User {
     get[Int]("timezone_id") ~
     get[Int]("locale_id") ~
     get[Int]("country_id") ~
+    get[Int]("approval_id") ~
     get[Date]("create_date") ~
     get[Option[Date]]("update_date") ~
     get[Int]("update_user_id")~
     get[Int]("status_id") map {
-      case id~account~name~description~password~organization_id~lang_id~timezone_id~locale_id~country_id
+      case id~account~name~description~password~organization_id
+      ~lang_id~timezone_id~locale_id~country_id~approval_id
       ~create_date~update_date~update_user_id~status_id =>
         User(id,
             account,
@@ -66,6 +71,7 @@ object User {
             timezone_id,
             locale_id,
             country_id,
+            approval_id,
             create_date,
             update_date,
             update_user_id,
@@ -119,11 +125,20 @@ object User {
   }
   def insert(user:UserCreateForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
+    //ユーザから承認オプションを取得し、更新ステータスを設定する。
+    //ユーザの承認オプションが1の場合、承認済みでデータを作成する。
+    //ユーザの承認オプションが2,3の場合、未承認でデータを作成する。
+    val status_id = this(update_user_id).getOrElse(throw new DaoException("20001",format("No exists User for user_id=%d", update_user_id)))
+      .approval_id match {
+        case 1 => 1
+        case 2|3 => 2
+        case _ => throw new DaoException("", "")
+    }
     //TODO create_dateのトリガーがうまく動かないため一時的にinsert文で設定
     DB.withConnection { implicit c =>
       SQL("""
-          insert into User (account, name, description, password, organization_id, lang_id, timezone_id, locale_id, country_id, create_date, update_user_id, status_id)
-          values ({account}, {name}, {description}, {password}, {organization_id}, {lang_id}, {timezone_id}, {locale_id}, {country_id},sysdate(),{update_user_id}, {status_id})
+          insert into User (account, name, description, password, organization_id, lang_id, timezone_id, locale_id, country_id, approval_id, create_date, update_user_id, status_id)
+          values ({account}, {name}, {description}, {password}, {organization_id}, {lang_id}, {timezone_id}, {locale_id}, {country_id},{approval_id}, sysdate(),{update_user_id}, {status_id})
           """)
           .on("account" -> user.account,
         	  "name" -> user.name,
@@ -134,13 +149,24 @@ object User {
         	  "timezone_id" -> user.timezone_id,
         	  "locale_id" -> user.locale_id,
         	  "country_id" -> user.country_id,
+        	  "approval_id" -> user.approval_id,
               "update_user_id" -> update_user_id,
-              "status_id" -> 1)
+              "status_id" -> status_id)
               .executeUpdate()
     }
   }
   def update(user:UserModifyForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
+    //ユーザから承認オプションを取得し、更新ステータスを設定する。
+    //ユーザの承認オプションが1の場合、承認済みでデータを作成する。
+    //ユーザの承認オプションが2,3の場合、未承認でデータを作成する。
+    val status_id = this(update_user_id).getOrElse(throw new DaoException("20001",format("No exists Approve_Option for user_id=%d", update_user_id)))
+      .approval_id match {
+        case 1 => 1
+        case 2|3 => 2
+        case _ => throw new DaoException("","")
+    }
+    //条件idが編集対象ユーザ、status_id=1(approved)のもの
     DB.withConnection { implicit c =>
       SQL("""
           update User set
@@ -148,7 +174,7 @@ object User {
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
             country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id} where id={id}
+            status_id={status_id} where id={id} and status_id = 1
           """)
           .on("id" -> user.account.id,
               "account" -> user.account.account,
@@ -160,12 +186,21 @@ object User {
         	  "locale_id" -> user.locale_id,
         	  "country_id" -> user.country_id,
               "update_user_id" -> update_user_id,
-              "status_id" -> 1)
+              "status_id" -> status_id)
               .executeUpdate()
     }
   }
   def updateWithPassword(user:UserModifyForm, update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
+    //ユーザから承認オプションを取得し、更新ステータスを設定する。
+    //ユーザの承認オプションが1の場合、承認済みでデータを作成する。
+    //ユーザの承認オプションが2,3の場合、未承認でデータを作成する。
+    val status_id = this(update_user_id).getOrElse(throw new DaoException("20001",format("No exists Approve_Option for user_id=%d", update_user_id)))
+      .approval_id match {
+        case 1 => 1
+        case 2|3 => 2
+        case _ => throw new DaoException("","")
+    }
     DB.withConnection { implicit c =>
       SQL("""
           update User set
@@ -174,7 +209,7 @@ object User {
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
             country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id} where id ={id}
+            status_id={status_id} where id ={id} and status_id=1
           """)
           .on("id" -> user.account.id,
               "account" -> user.account.account,
@@ -192,8 +227,54 @@ object User {
         	  "locale_id" -> user.locale_id,
         	  "country_id" -> user.country_id,
               "update_user_id" -> update_user_id,
-              "status_id" -> 1)
+              "status_id" -> status_id)
               .executeUpdate()
+    }
+  }
+  /**
+   * 承認方式は
+   * 1. 変更者と異なる人が承認を行うもの
+   * 2. 変更者も承認できるもの
+   * がある。
+   */
+  //val approve() = Map()
+  def updateForStatus(user_id:Int, approach:Pair[Seq[Int], Int], update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    lazy val exception = new DaoException("20001","NotExists")
+   	this(update_user_id).getOrElse(throw exception).approval_id match {
+    	// 自分のは承認できない。
+   		case 3 =>{
+   		  DB.withConnection { implicit c =>
+   			SQL("""
+   				update User set
+   				update_user_id={update_user_id}, status_id={status_id}
+   			    where id={id}
+   			          and status_id in ({status_ids})
+   				      and not update_user_id = {update_user_id}
+   				""")
+   				.on("id" -> user_id,
+   					"update_user_id" -> update_user_id,
+   					"status_ids" -> approach._1.mkString(","),
+   					"status_id" -> approach._2)
+   					.executeUpdate()
+   		  }
+   		}
+   		case 1|2 => {
+   		  //承認済=1にする
+   		  DB.withConnection { implicit c =>
+   			SQL("""
+   				update User set
+   				update_user_id={update_user_id}, status_id={status_id}
+   			    where id={id} and status_id in ({status_ids})
+   				""")
+   				.on("id" -> user_id,
+   					"update_user_id" -> update_user_id,
+   					"status_ids" -> approach._1.mkString(","),
+   					"status_id" -> approach._2)
+   					.executeUpdate()
+   		  }
+   		}
+   		case _ => throw new DaoException("","No exsits approval_option")
     }
   }
 }

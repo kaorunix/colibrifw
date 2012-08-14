@@ -36,7 +36,8 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
       "lang_id" -> number,
       "timezone_id" -> number,
       "locale_id" -> number,
-      "country_id" -> number
+      "country_id" -> number,
+      "approval_id" -> number
     )(UserCreateForm.apply)(UserCreateForm.unapply)
   )
   val userModifyForm = Form(
@@ -66,7 +67,8 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
       "lang_id" -> number,
       "timezone_id" -> number,
       "locale_id" -> number,
-      "country_id" -> number
+      "country_id" -> number,
+      "approval_id" -> number
     )
     (UserModifyForm.apply)
     (UserModifyForm.unapply)

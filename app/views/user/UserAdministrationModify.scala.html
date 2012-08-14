@@ -22,6 +22,7 @@
 	@select(userFormIn("timezone_id"), TimeZone.allSelect, '_label -> Messages("Common.timezone"))
 	@select(userFormIn("locale_id"), Locale.allSelect, '_label -> Messages("Common.locale"))
 	@select(userFormIn("country_id"), Country.allSelect, '_label -> Messages("Common.country"))
+	@select(userFormIn("approval_id"), Approval.allSelect, '_label -> Messages("Common.approval"))
       </fieldset>
       <input type="submit" class="btn primary" value="@Messages("Common.Modify")"> 
     }  

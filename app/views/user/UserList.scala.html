@@ -13,8 +13,16 @@
   <td>@user.timezone.get.name</td>
   <td>@user.locale.get.name</td>
   <td>@user.country.get.name</td>
+  <td>@user.approval.get.name</td>
   <td>@user.create_date</td>
   <td>@user.update_date.getOrElse("")</td>
-  <td>@* user.update_user.get.name *@</td>
+  <td>@* user.update_user.get *@</td>
+  <td>@user.update_user.get</td>
+  <td><input type="button" name="btn" value="@{Messages("Common.modify")}" 
+             onClick='location.href="/User/Modify/@user.id"'>
+      <input type="button" name="btn" value="@{Messages("Common.delete")}" 
+             onClick='
+if (confirm("削除してよろしいですか")) { location.href="/User/Delete/@user.id" }'></td>
+
 </tr>
 

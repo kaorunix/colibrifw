@@ -11,7 +11,8 @@ case class UserCreateForm(
 	lang_id: Int = 2,
 	timezone_id:Int = 2,
 	locale_id:Int = 2,
-	country_id:Int = 2
+	country_id:Int = 2,
+	approval_id:Int = 1
   ) extends Form {
 }
 
@@ -24,7 +25,8 @@ case class UserModifyForm(
 	lang_id: Int = 2,
 	timezone_id:Int = 2,
 	locale_id:Int = 2,
-	country_id:Int = 2
+	country_id:Int = 2,
+	approval_id:Int = 1
   ) extends Form {
 }
 
@@ -40,7 +42,8 @@ object UserModifyForm {
           user.lang_id,
           user.timezone_id,
           user.locale_id,
-          user.country_id
+          user.country_id,
+          user.approval_id
           )
       case _ => throw new NotFoundException("10001", format("Not Found User by id=%d", id))
     }
