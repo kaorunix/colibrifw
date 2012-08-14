@@ -7,7 +7,7 @@
 @main(Messages("User.title")) {
   <div class="container">
   <div class="hero-unit">
-    <H1>@Messages("Common.User")</H1>
+    <H1>@Messages("Common.UserList")</H1>
     <table border=1>
       <tr>
 	<th>@Messages("User.account")</th>
@@ -22,6 +22,7 @@
 	<th>@Messages("Common.create_date")</th>
 	<th>@Messages("Common.update_date")</th>
 	<th>@Messages("Common.update_user")</th>
+	<th>@Messages("Common.status")</th>
 	<th>&nbsp;</th>
       </tr>
       @users.map(user => UserList(user))

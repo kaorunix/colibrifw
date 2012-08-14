@@ -109,23 +109,18 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
 	  }
     )
   }
- /* def mkUserForm(id:Int):UserModifyForm = {
-    User(id) match {
-      case Some(user) => UserModifyForm(
-    	  user.account,
-          user.name,
-          Some(user.description.getOrElse("")),
-          None,
-          None,
-          user.organization_id,
-          user.lang_id,
-          user.timezone_id,
-          user.locale_id,
-          user.country_id)
-      case _ => UserModifyForm()
-    }
-  }*/
-  def delete = TODO/*Action {implicit request =>
-    gotoLogoutSucceeded
-  }*/
+ def deleteById(id:String) = Action {
+   User(id.toInt) match {
+     case Some(user) => Ok(views.html.user.UserAdministrationDelete(user))
+     case _ => Redirect(routes.UserAdministration.list)
+   	}
+  }
+  def delete() = Action { implicit request =>
+    val params:Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
+    val id = params.get("id").head
+    User.delete(id.toInt, loginUser.id.get) match {
+	  case 1 => Redirect(routes.UserAdministration.list)
+	  case _ => Redirect(routes.UserAdministration.list)
+	}
+  }
 }

@@ -277,4 +277,25 @@ object User {
    		case _ => throw new DaoException("","No exsits approval_option")
     }
   }
+  def delete(user_id:Int, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    //ユーザから承認オプションを取得し、更新ステータスを設定する。
+    //ユーザの承認オプションが1の場合、承認済みでデータを作成する。
+    //ユーザの承認オプションが2,3の場合、未承認でデータを作成する。
+    val status_id = this(update_user_id).getOrElse(throw new DaoException("20001",format("No exists Approve_Option for user_id=%d", update_user_id)))
+      .approval_id match {
+        case 1 => 6
+        case 2|3 => 4
+        case _ => throw new DaoException("","")
+    }
+    DB.withConnection { implicit c =>
+      SQL("""
+          update User set
+            status_id={status_id} where id ={id} and status_id=1
+          """)
+          .on("id" -> user_id,
+              "status_id" -> status_id)
+              .executeUpdate()
+    }
+  }
 }

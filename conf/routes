@@ -9,12 +9,12 @@ POST    /login                      org.colibrifw.controllers.Login.login
 GET     /logout                     org.colibrifw.controllers.Login.logout
 GET     /info                       org.colibrifw.controllers.Info.index
 GET     /User/Lists                 org.colibrifw.controllers.UserAdministration.list
-GET     /User/Create                 org.colibrifw.controllers.UserAdministration.index
+GET     /User/Create                org.colibrifw.controllers.UserAdministration.index
 POST    /User/Create                org.colibrifw.controllers.UserAdministration.create
-GET     /User/Modify/:id             org.colibrifw.controllers.UserAdministration.modifyById(id)
+GET     /User/Modify/:id            org.colibrifw.controllers.UserAdministration.modifyById(id)
 POST    /User/Modify             org.colibrifw.controllers.UserAdministration.modify
-#GET     /User/Delete                org.colibrifw.controllers.UserAdministration.index
-#POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
+GET     /User/Delete/:id           org.colibrifw.controllers.UserAdministration.deleteById(id)
+POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
 GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.list
 GET     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.index
 POST     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.create

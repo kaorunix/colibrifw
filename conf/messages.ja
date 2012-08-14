@@ -1,6 +1,13 @@
 Common.Title=タイトル
 Common.List=一覧
 Common.Detail=詳細
+Common.name=名称
+Common.UserList=ユーザ一覧
+Common.description=説明
+Common.create_date=作成日
+Common.update_date=更新日
+Common.Status=ステータス
+Common.update_user=更新ユーザ名
 Common.OK=確認
 Common.Submit=送信
 Common.Create=作成
