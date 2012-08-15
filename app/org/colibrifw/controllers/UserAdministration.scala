@@ -18,7 +18,7 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
   val userCreateForm = Form(
     mapping(
       "account" -> email.verifying(
-          Constraints.pattern("""[a-zA-Z0-9\.\_\-]+[\@]+[a-zA-Z0-9\.\_\-]+""".r),
+/*          Constraints.pattern("""[a-zA-Z0-9\.\_\-]+[\@]+[a-zA-Z0-9\.\_\-]+""".r),*/
           Constraint[String]("User.account.exists") {
             case (a:String) if (User.findUserByAccount(a) != None) =>
               Invalid(ValidationError("User.error.account.exists"))
@@ -119,6 +119,20 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
     val params:Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
     val id = params.get("id").head
     User.delete(id.toInt, loginUser.id.get) match {
+	  case 1 => Redirect(routes.UserAdministration.list)
+	  case _ => Redirect(routes.UserAdministration.list)
+	}
+  }
+ def approveById(id:String) = Action {
+   User(id.toInt) match {
+     case Some(user) => Ok(views.html.user.UserAdministrationApprove(user))
+     case _ => Redirect(routes.UserAdministration.list)
+   	}
+  }
+  def approve() = Action { implicit request =>
+    val params:Option[Map[String, Seq[String]]] = request.body.asFormUrlEncoded
+    val id = params.get("id").head
+    User.approve(id.toInt, loginUser.id.get) match {
 	  case 1 => Redirect(routes.UserAdministration.list)
 	  case _ => Redirect(routes.UserAdministration.list)
 	}

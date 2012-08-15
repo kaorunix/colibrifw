@@ -1,0 +1,31 @@
+@(user:org.colibrifw.common.models.User)
+@import helper._
+@import helper.twitterBootstrap._
+@import play.api.i18n.Messages
+@import org.colibrifw.controllers._
+@import org.colibrifw.common.models._
+
+@main("UserAdministration") {
+  <div class="container">
+  <div class="hero-unit">
+    <H1>@{Messages("Common.User") + " - (" + Messages("Common.Approve")})</H1>
+    <form action="@routes.UserAdministration.approve" method=POST>
+      <fieldset>
+	<input type=hidden name="id" value="@user.id">
+	@Messages("User.account"): @user.account<br>
+	@Messages("User.name"): @user.name<br>
+	@Messages("User.description"): @user.description.getOrElse("")<br>
+	@Messages("Common.organization"): @user.organization.get.name<br>
+	@Messages("Common.lang"): @user.lang.get.name<br>
+	@Messages("Common.timezone"): @user.timezone.get.name<br>
+	@Messages("Common.locale"): @user.locale.get.name<br>
+	@Messages("Common.country"): @user.country.get.name<br>
+	@Messages("Common.approval"): @Messages("Approval."+user.approval.get.name)<br>
+	@Messages("Common.status"): @Messages("Status."+user.status.get.name)<br>
+      </fieldset>
+      <br>
+      <input type="submit" class="btn primary" value="@Messages("Common.Approve")" onClick'return confirm("@Messages("Common.approve.confirm")");'>
+    </form>
+  </div>
+  </div>
+}

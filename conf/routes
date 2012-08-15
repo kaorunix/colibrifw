@@ -15,6 +15,8 @@ GET     /User/Modify/:id            org.colibrifw.controllers.UserAdministration
 POST    /User/Modify             org.colibrifw.controllers.UserAdministration.modify
 GET     /User/Delete/:id           org.colibrifw.controllers.UserAdministration.deleteById(id)
 POST    /User/Delete                org.colibrifw.controllers.UserAdministration.delete
+GET     /User/Approve/:id           org.colibrifw.controllers.UserAdministration.approveById(id)
+POST    /User/Approve                org.colibrifw.controllers.UserAdministration.approve
 GET     /Organization/Lists          org.colibrifw.controllers.OrganizationAdministration.list
 GET     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.index
 POST     /Organization/Create          org.colibrifw.controllers.OrganizationAdministration.create

@@ -28,8 +28,8 @@ case class User(
     approval_id:Int,
     create_date:Date,
     update_date:Option[Date],
-    status_id:Int,
-    update_user_id:Int
+    update_user_id:Int,
+    status_id:Int
     ) extends Model {
 	def lang = Lang(lang_id)
 	def timezone = TimeZone(timezone_id)
@@ -37,8 +37,8 @@ case class User(
 	def country = Country(country_id)
 	def approval = Approval(approval_id)
 	def organization = Organization(organization_id)
-	def status = Status(status_id)
 	def update_user = User.findUserNameById(update_user_id)
+	def status = Status(status_id)
 }
 
 object User {
@@ -113,9 +113,9 @@ object User {
 	  SQL("SELECT * FROM User WHERE account={account} and not id={id}").on("account" -> account, "id" -> id).as(User.simple.singleOpt)
 	}
   }
-  def all(order:String="id"):Seq[User] = {
+  def all(order:String="id", asc:Boolean=true):Seq[User] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM User WHERE status_id not in ({status_id}) order by {order}").on("status_id" -> "5,6", "order" -> order).as(User.simple *)
+	  SQL("SELECT * FROM User WHERE status_id not in (5,6) order by " + order + {if (!asc) " DESC" else ""}).as(User.simple *)
 	}
   }
   def allo(organization_id:Int, order:String="id"):Seq[User] = {
@@ -173,8 +173,10 @@ object User {
             account={account}, name={name}, description={description},
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
-            country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id} where id={id} and status_id = 1
+            country_id={country_id}, approval_id={approval_id},
+            update_user_id={update_user_id},
+            status_id={status_id}, update_date=sysdate()
+            where id={id} and status_id = 1
           """)
           .on("id" -> user.account.id,
               "account" -> user.account.account,
@@ -185,6 +187,7 @@ object User {
         	  "timezone_id" -> user.timezone_id,
         	  "locale_id" -> user.locale_id,
         	  "country_id" -> user.country_id,
+        	  "approval_id" -> user.approval_id,
               "update_user_id" -> update_user_id,
               "status_id" -> status_id)
               .executeUpdate()
@@ -208,8 +211,10 @@ object User {
             password={password},
             organization_id={organization_id}, lang_id={lang_id},
             timezone_id={timezone_id}, locale_id={locale_id},
-            country_id={country_id}, update_user_id={update_user_id},
-            status_id={status_id} where id ={id} and status_id=1
+            country_id={country_id}, approval_id={approval_id},
+            update_user_id={update_user_id},
+            status_id={status_id}, update_date=sysdate()
+            where id ={id} and status_id=1
           """)
           .on("id" -> user.account.id,
               "account" -> user.account.account,
@@ -226,6 +231,7 @@ object User {
         	  "timezone_id" -> user.timezone_id,
         	  "locale_id" -> user.locale_id,
         	  "country_id" -> user.country_id,
+        	  "approval_id" -> user.approval_id,
               "update_user_id" -> update_user_id,
               "status_id" -> status_id)
               .executeUpdate()
@@ -237,7 +243,6 @@ object User {
    * 2. 変更者も承認できるもの
    * がある。
    */
-  //val approve() = Map()
   def updateForStatus(user_id:Int, approach:Pair[Seq[Int], Int], update_user_id:Int):Int = {
     println("update_user_id=" + update_user_id)
     lazy val exception = new DaoException("20001","NotExists")
@@ -295,6 +300,39 @@ object User {
           """)
           .on("id" -> user_id,
               "status_id" -> status_id)
+              .executeUpdate()
+    }
+  }
+  def approve(user_id:Int, update_user_id:Int):Int = {
+    println("update_user_id=" + update_user_id)
+    val user = User(user_id) match {
+      case Some(u) => u
+      case _ => throw new DaoException("", format("Not exsits user=%s", user_id))
+    }
+    val where_statement = this(update_user_id)
+    .getOrElse(throw new DaoException("20001",format("No exists Approve_Option for user_id=%d", update_user_id)))
+      .approval_id match {
+        case 1|2 => " and update_user_id={update_user_id}"
+        case 3 => ""
+    }
+    val status_id:Int = user.status_id match {
+      case 2|3 => 1 // 2:作成、3:変更を1:承認へ変える
+      case 4 => 6   // 4:削除 を 6:削除済みへ変える
+      case _ => throw new DaoException("","")
+    }
+    //ユーザから承認オプションを取得し、更新ステータスを設定する。
+    //ユーザの承認オプションが1,2の場合、承認済みにデータを更新する。
+    //ユーザの承認オプションが3の場合、更新者が自分でない場合は承認済みにデータを更新する。
+    DB.withConnection { implicit c =>
+      SQL("""
+       	update User set
+        status_id={status_id}, update_user_id={update_user_id}
+        where id ={id} and status_id={current_status_id}
+        """ + where_statement)
+          .on("id" -> user_id,
+              "current_status_id" -> user.status_id,
+              "status_id" -> status_id,
+              "update_user_id" -> update_user_id)
               .executeUpdate()
     }
   }
