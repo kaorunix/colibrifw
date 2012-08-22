@@ -95,7 +95,9 @@ object User {
   }
   def findUserByLoginForm(login:LoginForm):Option[User] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM User WHERE account={account} AND password={password_encoded}")
+	  SQL("""SELECT * FROM User
+	  		WHERE account={account} AND password={password_encoded}
+	          AND status_id in (1,3,4)""") // status_id 1:承認 3:更新 4:削除 状態のものがログインできる
   	    .on("account" -> login.account, "password_encoded" -> Encryption.encript(login.password))
 	    .as(User.simple.singleOpt)
 	}
@@ -105,7 +107,11 @@ object User {
   }
   def findUserByAccount(account:String):Option[User] = {
 	DB.withConnection { implicit c =>
-	  SQL("SELECT * FROM User WHERE account={account}").on("account" -> account).as(User.simple.singleOpt)
+	  SQL("""SELECT * FROM User
+	      WHERE account={account}
+	      AND not status_id = 6)
+	      """) // status_id 6:削除済み 状態のもの以外が作成できる
+	  .on("account" -> account).as(User.simple.singleOpt)
 	}
   }
   def findUserByAccount(id:Int, account:String):Option[User] = {

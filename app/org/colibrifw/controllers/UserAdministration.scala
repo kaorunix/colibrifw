@@ -13,6 +13,8 @@ import org.colibrifw.common.forms.AccountForm
 import org.colibrifw.common.utils._
 import org.colibrifw.common.models.User
 import jp.t2v.lab.play20.auth.LoginLogout
+import play.api.i18n.Messages
+import play.api.i18n.Lang
 
 object UserAdministration extends Controller with LoginLogout with AuthConfigImpl with LoginUser{
   val userCreateForm = Form(
@@ -73,9 +75,9 @@ object UserAdministration extends Controller with LoginLogout with AuthConfigImp
     (UserModifyForm.apply)
     (UserModifyForm.unapply)
   )
-  def list = Action {
+  def list = Action {implicit request =>
     val users=User.all()
-    Ok(views.html.user.UserAdministrationList(users))
+    Ok(views.html.user.UserAdministrationList(users)) //(Lang(loginUser.lang.get.acronym))
   }
   def index = Action {
     Ok(views.html.user.UserAdministrationCreate(userCreateForm))

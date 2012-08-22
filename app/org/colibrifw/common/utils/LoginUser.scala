@@ -4,7 +4,10 @@ import org.colibrifw.common.models.User
 import play.api.mvc.Session
 import play.api.mvc.Request
 import play.api.mvc.Controller
-trait LoginUser {
-  def loginUser[T](implicit request:Request[T]):User = User(request.session.get("loginUser").get.toInt).get
-  //override def Ok(content:)
+import play.api.i18n.Lang
+
+trait LoginUser extends Controller{
+  def loginUser[T](implicit request:Request[T]):User = {
+    User(request.session.get("loginUser").get.toInt).get
+  }
 }
